@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 
 from app.database import get_db
@@ -25,6 +25,9 @@ class LoginRequest(BaseModel):
 
 @router.post("/register")
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    if not req.username or not req.password:
+        raise HTTPException(status_code=400, detail="用户名和密码不能为空")
+
     existing = db.query(User).filter(User.username == req.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="用户名已存在")
@@ -66,6 +69,7 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
         "user": {
             "user_id": user.user_id,
             "username": user.username,
+            "real_name": user.real_name,
             "role": user.role,
         }
     }
