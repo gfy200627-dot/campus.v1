@@ -1,6 +1,6 @@
 from sqlalchemy import (
-    Column, BigInteger, String, Text, Decimal, Boolean,
-    Integer, DateTime, ForeignKey
+    Column, BigInteger, String, Text, Boolean,
+    Integer, DateTime, ForeignKey, Numeric
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
