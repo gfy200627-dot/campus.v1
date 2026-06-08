@@ -36,8 +36,17 @@ class Category(Base):
     sort_order = Column(Integer, nullable=False, default=0)
     status = Column(String(20), nullable=False, default="ACTIVE")
 
-    parent = relationship("Category", remote_side="Category.category_id", foreign_keys=[parent_id])
-    children = relationship("Category", foreign_keys=[parent_id])
+    # 自关联（邻接表）：children 为一对多，parent 为多对一，二者用 back_populates 关联，
+    # remote_side 指向主键，SQLAlchemy 即可自动识别外键，不再产生 overlaps 警告/报错。
+    children = relationship(
+        "Category",
+        back_populates="parent",
+    )
+    parent = relationship(
+        "Category",
+        back_populates="children",
+        remote_side=[category_id],
+    )
     items = relationship("Item", back_populates="category")
 
 
