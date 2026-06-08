@@ -1,13 +1,17 @@
 """
 运行方式：python seed.py
-在启动后端前，先用 MySQL 建好数据库和表，然后运行此脚本插入测试数据。
+启动后端前，先在 MySQL 建好数据库（CREATE DATABASE campus_secondhand），
+表会由应用自动创建；然后运行此脚本插入测试数据。
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from app.database import SessionLocal
+from app.database import SessionLocal, engine, Base
 from app.models.models import User, Category, Item
 from app.auth import hash_password
+
+# 确保表已创建
+Base.metadata.create_all(bind=engine)
 
 db = SessionLocal()
 
